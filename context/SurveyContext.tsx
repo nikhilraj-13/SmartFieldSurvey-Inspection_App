@@ -1,9 +1,24 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-const SurveyContext = createContext();
+type Survey = {
+  id: string;
+  site: string;
+  client: string;
+  priority: string;
+  description: string;
+  date: string;
+};
 
-export function SurveyProvider({ children }) {
-  const [surveys, setSurveys] = useState([
+type SurveyContextType = {
+  surveys: Survey[];
+  addSurvey: (survey: Omit<Survey, 'id'>) => void;
+  deleteSurvey: (id: string) => void;
+};
+
+const SurveyContext = createContext<SurveyContextType | null>(null);
+
+export function SurveyProvider({ children }: { children: ReactNode }) {
+  const [surveys, setSurveys] = useState<Survey[]>([
     {
       id: "1",
       site: "ABC Construction",
@@ -30,11 +45,11 @@ export function SurveyProvider({ children }) {
     },
   ]);
 
-  const addSurvey = (survey) => {
+  const addSurvey = (survey: Omit<Survey, 'id'>) => {
     setSurveys([...surveys, { ...survey, id: Date.now().toString() }]);
   };
 
-  const deleteSurvey = (id) => {
+  const deleteSurvey = (id: string) => {
     setSurveys(surveys.filter((item) => item.id !== id));
   };
 
@@ -46,5 +61,9 @@ export function SurveyProvider({ children }) {
 }
 
 export function useSurvey() {
-  return useContext(SurveyContext);
+  const context = useContext(SurveyContext);
+  if (!context) {
+    throw new Error('useSurvey must be used within a SurveyProvider');
+  }
+  return context;
 }
