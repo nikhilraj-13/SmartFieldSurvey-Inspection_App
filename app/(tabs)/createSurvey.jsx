@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
+import { useRouter } from "expo-router";
+import { useSurvey } from "../../context/SurveyContext";
 import Header from "../../components/header";
 import MyInput from "../../components/MyInput";
 import MyButton from "../../components/MyButton";
 
 export default function CreateSurvey() {
+  const router = useRouter();
+  const { addSurvey } = useSurvey();
   const [siteName, setSiteName] = useState("");
   const [clientName, setClientName] = useState("");
   const [description, setDescription] = useState("");
@@ -23,6 +27,14 @@ export default function CreateSurvey() {
       return;
     }
 
+    addSurvey({
+      site: siteName,
+      client: clientName,
+      priority,
+      description,
+      date
+    });
+
     Alert.alert("Success", "Survey Created Successfully!");
 
     setSiteName("");
@@ -30,6 +42,8 @@ export default function CreateSurvey() {
     setDescription("");
     setPriority("");
     setDate("");
+    
+    router.push("/(tabs)/history");
   };
 
   return (

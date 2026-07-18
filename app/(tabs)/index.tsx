@@ -1,11 +1,15 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { useRouter } from "expo-router";
+import { useSurvey } from "../../context/SurveyContext";
 import Header from "../../components/header";
 import SurveyCard from "../../components/SurveyCard";
 import MyButton from "../../components/MyButton";
 
 export default function Dashboard() {
-
-  const todaySurvey = 5;
+  const router = useRouter();
+  const { surveys } = useSurvey();
+  const todaySurvey = surveys.length;
+  const recentSurveys = surveys.slice(-2).reverse();
 
   return (
     <ScrollView style={styles.container}>
@@ -13,7 +17,7 @@ export default function Dashboard() {
       <Header title="Smart Survey App" />
 
       <View style={styles.box}>
-        <Text style={styles.heading}>Welcome 👋</Text>
+        <Text style={styles.heading}>Welcome </Text>
         <Text>Name : Nikhil Raj</Text>
         <Text>Enrollment : 23CE001</Text>
         <Text>Course : React Native</Text>
@@ -21,7 +25,7 @@ export default function Dashboard() {
 
       <View style={styles.countBox}>
         <Text style={styles.count}>{todaySurvey}</Text>
-        <Text>Today's Surveys</Text>
+        <Text>Today&apos;s Surveys</Text>
       </View>
 
       <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -29,12 +33,12 @@ export default function Dashboard() {
       <View style={styles.row}>
 
         <View style={styles.card}>
-          <Text style={styles.icon}>📝</Text>
+          <Text style={styles.icon}>📋</Text>
           <Text>New Survey</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.icon}>📷</Text>
+          <Text style={styles.icon}>⋆.📷˚</Text>
           <Text>Camera</Text>
         </View>
 
@@ -43,12 +47,12 @@ export default function Dashboard() {
       <View style={styles.row}>
 
         <View style={styles.card}>
-          <Text style={styles.icon}>📍</Text>
+          <Text style={styles.icon}>⁀જ➣</Text>
           <Text>Location</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.icon}>👥</Text>
+          <Text style={styles.icon}>📞</Text>
           <Text>Contacts</Text>
         </View>
 
@@ -57,21 +61,18 @@ export default function Dashboard() {
 
       <Text style={styles.sectionTitle}>Recent Survey</Text>
 
-      <SurveyCard
-        site="ABC Construction"
-        client="Mr. Patel"
-        priority="High"
-      />
-
-      <SurveyCard
-        site="Sunrise Mall"
-        client="Reliance"
-        priority="Medium"
-      />
+      {recentSurveys.map((survey) => (
+        <SurveyCard
+          key={survey.id}
+          site={survey.site}
+          client={survey.client}
+          priority={survey.priority}
+        />
+      ))}
 
       <MyButton
         title="Create New Survey"
-        onPress={() => alert("Navigate to Survey Screen")}
+        onPress={() => router.push("/(tabs)/createSurvey")}
       />
 
     </ScrollView>

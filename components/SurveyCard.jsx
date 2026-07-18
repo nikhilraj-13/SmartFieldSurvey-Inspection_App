@@ -4,6 +4,8 @@ export default function SurveyCard({
   site,
   client,
   priority,
+  description,
+  date,
 }) {
   return (
     <View style={styles.card}>
@@ -12,6 +14,9 @@ export default function SurveyCard({
       <Text>Client : {client}</Text>
 
       <Text>Priority : {priority}</Text>
+      
+      {date ? <Text>Date : {date}</Text> : null}
+      {description ? <Text numberOfLines={1}>Desc : {description}</Text> : null}
     </View>
   );
 }

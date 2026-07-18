@@ -1,5 +1,6 @@
 
 import React, { useState } from "react";
+import { useSurvey } from "../../context/SurveyContext";
 
 import {
     View,
@@ -16,35 +17,7 @@ import MyButton from "../../components/MyButton";
 
 
 export default function HistoryScreen() {
-
-
-    const [surveys, setSurveys] = useState([
-
-        {
-            id: "1",
-            site: "ABC Construction",
-            client: "Patel Company",
-            priority: "High",
-        },
-
-
-        {
-            id: "2",
-            site: "Sunrise Mall",
-            client: "Reliance",
-            priority: "Medium",
-        },
-
-
-        {
-            id: "3",
-            site: "Road Inspection",
-            client: "Government",
-            priority: "Low",
-        },
-
-
-    ]);
+    const { surveys, deleteSurvey } = useSurvey();
 
 
     const [search, setSearch] = useState("");
@@ -54,51 +27,30 @@ export default function HistoryScreen() {
 
 
 
-    const deleteSurvey = (id) => {
-
-
+    const handleDelete = (id) => {
         Alert.alert(
             "Delete Survey",
             "Are you sure you want to delete?",
-
             [
-
                 {
                     text: "Cancel",
                 },
-
-
                 {
                     text: "Delete",
-
                     onPress: () => {
-
-                        setSurveys(
-                            surveys.filter(
-                                item => item.id !== id
-                            )
-                        );
-
+                        deleteSurvey(id);
                     }
-
                 }
-
             ]
-
         );
-
     };
 
 
 
 
     const viewDetails = (item) => {
-
-
         Alert.alert(
-
             "Survey Details",
-
             `
 Site:
 ${item.site}
@@ -108,10 +60,14 @@ ${item.client}
 
 Priority:
 ${item.priority}
+
+Date:
+${item.date || 'N/A'}
+
+Description:
+${item.description || 'N/A'}
       `
-
         );
-
     };
 
 
@@ -241,6 +197,8 @@ ${item.priority}
                                             site={item.site}
                                             client={item.client}
                                             priority={item.priority}
+                                            description={item.description}
+                                            date={item.date}
                                         />
                                         <MyButton
                                             title="View Details"
@@ -251,7 +209,7 @@ ${item.priority}
                                         <MyButton
                                             title="Delete"
                                             onPress={() =>
-                                                deleteSurvey(item.id)
+                                                handleDelete(item.id)
                                             }
                                         />
                                     </View>
