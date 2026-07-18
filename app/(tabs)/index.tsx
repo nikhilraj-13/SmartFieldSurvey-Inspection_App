@@ -1,98 +1,148 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import Header from "../../components/Header";
+import SurveyCard from "../../components/SurveyCard";
+import MyButton from "../../components/MyButton";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Dashboard() {
 
-export default function HomeScreen() {
+  const todaySurvey = 5;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ScrollView style={styles.container}>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      {/* Header */}
+      <Header title="Smart Survey App" />
+
+      {/* Welcome */}
+      <View style={styles.box}>
+        <Text style={styles.heading}>Welcome 👋</Text>
+        <Text>Name : John Doe</Text>
+        <Text>Enrollment : 23CE001</Text>
+        <Text>Course : React Native</Text>
+      </View>
+
+      {/* Survey Count */}
+      <View style={styles.countBox}>
+        <Text style={styles.count}>{todaySurvey}</Text>
+        <Text>Today's Surveys</Text>
+      </View>
+
+      {/* Quick Actions */}
+      <Text style={styles.sectionTitle}>Quick Actions</Text>
+
+      <View style={styles.row}>
+
+        <View style={styles.card}>
+          <Text style={styles.icon}>📝</Text>
+          <Text>New Survey</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.icon}>📷</Text>
+          <Text>Camera</Text>
+        </View>
+
+      </View>
+
+      <View style={styles.row}>
+
+        <View style={styles.card}>
+          <Text style={styles.icon}>📍</Text>
+          <Text>Location</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.icon}>👥</Text>
+          <Text>Contacts</Text>
+        </View>
+
+      </View>
+
+      {/* Recent Survey */}
+
+      <Text style={styles.sectionTitle}>Recent Survey</Text>
+
+      <SurveyCard
+        site="ABC Construction"
+        client="Mr. Patel"
+        priority="High"
+      />
+
+      <SurveyCard
+        site="Sunrise Mall"
+        client="Reliance"
+        priority="Medium"
+      />
+
+      <MyButton
+        title="Create New Survey"
+        onPress={() => alert("Navigate to Survey Screen")}
+      />
+
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+
+  container: {
+    flex: 1,
+    backgroundColor: "#F5F5F5",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+
+  box: {
+    backgroundColor: "#fff",
+    margin: 15,
+    padding: 15,
+    borderRadius: 10,
+    elevation: 4,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
+
+  countBox: {
+    backgroundColor: "#2196F3",
+    marginHorizontal: 15,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  count: {
+    fontSize: 40,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    margin: 15,
+  },
+
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginBottom: 15,
+  },
+
+  card: {
+    backgroundColor: "#fff",
+    width: 150,
+    height: 100,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 4,
+  },
+
+  icon: {
+    fontSize: 35,
+    marginBottom: 10,
+  },
+
 });
