@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import Header from "../../components/Header";
+import Header from "../../components/header";
 import SurveyCard from "../../components/SurveyCard";
 import MyButton from "../../components/MyButton";
 
@@ -10,24 +10,20 @@ export default function Dashboard() {
   return (
     <ScrollView style={styles.container}>
 
-      {/* Header */}
       <Header title="Smart Survey App" />
 
-      {/* Welcome */}
       <View style={styles.box}>
         <Text style={styles.heading}>Welcome 👋</Text>
-        <Text>Name : John Doe</Text>
+        <Text>Name : Nikhil Raj</Text>
         <Text>Enrollment : 23CE001</Text>
         <Text>Course : React Native</Text>
       </View>
 
-      {/* Survey Count */}
       <View style={styles.countBox}>
         <Text style={styles.count}>{todaySurvey}</Text>
         <Text>Today's Surveys</Text>
       </View>
 
-      {/* Quick Actions */}
       <Text style={styles.sectionTitle}>Quick Actions</Text>
 
       <View style={styles.row}>
@@ -58,7 +54,6 @@ export default function Dashboard() {
 
       </View>
 
-      {/* Recent Survey */}
 
       <Text style={styles.sectionTitle}>Recent Survey</Text>
 

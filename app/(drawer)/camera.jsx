@@ -10,8 +10,8 @@ import {
 
 import { CameraView, useCameraPermissions } from "expo-camera";
 
-import Header from "../components/Header";
-import MyButton from "../components/MyButton";
+import Header from "../../components/header";
+import MyButton from "../../components/MyButton";
 
 export default function CameraScreen() {
   const cameraRef = useRef(null);
@@ -30,7 +30,6 @@ export default function CameraScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Ask for permission
   if (!permission) {
     return <View />;
   }
@@ -40,15 +39,11 @@ export default function CameraScreen() {
       <View style={styles.center}>
         <Text>Camera permission required.</Text>
 
-        <MyButton
-          title="Allow Camera"
-          onPress={requestPermission}
-        />
+        <MyButton title="Allow Camera" onPress={requestPermission} />
       </View>
     );
   }
 
-  // Capture Photo
   const takePhoto = async () => {
     if (cameraRef.current) {
       const result = await cameraRef.current.takePictureAsync();
@@ -61,27 +56,21 @@ export default function CameraScreen() {
     }
   };
 
-  // Delete Photo
   const deletePhoto = () => {
-    Alert.alert(
-      "Delete Photo",
-      "Are you sure?",
-      [
-        {
-          text: "Cancel",
+    Alert.alert("Delete Photo", "Are you sure?", [
+      {
+        text: "Cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => {
+          setPhoto(null);
+          setTime("");
         },
-        {
-          text: "Delete",
-          onPress: () => {
-            setPhoto(null);
-            setTime("");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
-  // Loading Screen
   if (loading) {
     return (
       <View style={styles.center}>
@@ -98,36 +87,19 @@ export default function CameraScreen() {
 
       {photo == null ? (
         <>
-          <CameraView
-            style={styles.camera}
-            ref={cameraRef}
-          />
+          <CameraView style={styles.camera} ref={cameraRef} />
 
-          <MyButton
-            title="Capture Photo"
-            onPress={takePhoto}
-          />
+          <MyButton title="Capture Photo" onPress={takePhoto} />
         </>
       ) : (
         <>
-          <Image
-            source={{ uri: photo }}
-            style={styles.image}
-          />
+          <Image source={{ uri: photo }} style={styles.image} />
 
-          <Text style={styles.time}>
-            Capture Time : {time}
-          </Text>
+          <Text style={styles.time}>Capture Time : {time}</Text>
 
-          <MyButton
-            title="Retake Photo"
-            onPress={() => setPhoto(null)}
-          />
+          <MyButton title="Retake Photo" onPress={() => setPhoto(null)} />
 
-          <MyButton
-            title="Delete Photo"
-            onPress={deletePhoto}
-          />
+          <MyButton title="Delete Photo" onPress={deletePhoto} />
         </>
       )}
     </View>

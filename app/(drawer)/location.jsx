@@ -4,25 +4,21 @@ import { View, Text, StyleSheet, Alert } from "react-native";
 import * as Location from "expo-location";
 import * as Clipboard from "expo-clipboard";
 
-import Header from "../components/Header";
-import MyButton from "../components/MyButton";
+import Header from "../../components/header";
+import MyButton from "../../components/MyButton";
 
 export default function LocationScreen() {
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [accuracy, setAccuracy] = useState("");
 
-  // Get Current Location
   const getLocation = async () => {
-    // Request Permission
     let { status } = await Location.requestForegroundPermissionsAsync();
 
     if (status !== "granted") {
       Alert.alert("Permission Denied", "Location permission is required.");
       return;
     }
-
-    // Get Current Position
     let location = await Location.getCurrentPositionAsync({});
 
     setLatitude(location.coords.latitude.toString());
@@ -30,7 +26,6 @@ export default function LocationScreen() {
     setAccuracy(location.coords.accuracy.toString());
   };
 
-  // Copy Location
   const copyLocation = async () => {
     const locationText = `Latitude: ${latitude}, Longitude: ${longitude}`;
 
