@@ -74,7 +74,7 @@ export default function CameraScreen() {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="blue" />
+        <ActivityIndicator size="large" color="#4F46E5" />
 
         <Text>Opening Camera...</Text>
       </View>

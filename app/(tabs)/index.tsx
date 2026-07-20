@@ -67,6 +67,8 @@ export default function Dashboard() {
           site={survey.site}
           client={survey.client}
           priority={survey.priority}
+          description={survey.description}
+          date={survey.date}
         />
       ))}
 
