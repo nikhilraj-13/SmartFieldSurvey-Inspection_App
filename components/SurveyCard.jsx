@@ -1,67 +1,81 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SurveyCard({
+  id,
   site,
   client,
   priority,
   description,
   date,
+  onView,
+  onDelete,
 }) {
-  const getPriorityColor = (level) => {
+  const getPriorityColors = (level) => {
     switch (level?.toLowerCase()) {
       case "high":
-        return "#EF4444"; // Red
+        return { bg: "#BA4A4A", text: "#FFFFFF" }; // Muted Red
       case "medium":
-        return "#F59E0B"; // Amber
+        return { bg: "#D98636", text: "#FFFFFF" }; // Muted Orange
       case "low":
-        return "#10B981"; // Green
+        return { bg: "#4A8B6F", text: "#FFFFFF" }; // Muted Green
       default:
-        return "#94A3B8"; // Gray
+        return { bg: "#94A3B8", text: "#FFFFFF" }; // Gray
     }
   };
+
+  const badgeColors = getPriorityColors(priority);
+
+  // Format ID to SRV001, SRV002, etc. If it's already structured, use it directly, otherwise pad it.
+  const formattedId = id
+    ? id.startsWith("SRV")
+      ? id
+      : `SRV${String(id).padStart(3, "0")}`
+    : null;
 
   return (
     <View style={styles.card}>
       <View style={styles.headerRow}>
         <Text style={styles.title}>{site}</Text>
-        <View
-          style={[
-            styles.badge,
-            { backgroundColor: getPriorityColor(priority) + "1A" }, // 10% opacity background
-          ]}
-        >
-          <Text
-            style={[
-              styles.badgeText,
-              { color: getPriorityColor(priority) },
-            ]}
-          >
+        <View style={[styles.badge, { backgroundColor: badgeColors.bg }]}>
+          <Text style={[styles.badgeText, { color: badgeColors.text }]}>
             {priority}
           </Text>
         </View>
       </View>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Client</Text>
-        <Text style={styles.value}>{client}</Text>
-      </View>
+      <Text style={styles.client}>{client}</Text>
+      {formattedId && <Text style={styles.idText}>{formattedId}</Text>}
 
-      {date ? (
+      {date && (
         <View style={styles.row}>
-          <Text style={styles.label}>Date</Text>
+          <Text style={styles.label}>Date: </Text>
           <Text style={styles.value}>{date}</Text>
         </View>
-      ) : null}
+      )}
 
-      {description ? (
+      {description && (
         <View style={styles.descContainer}>
-          <Text style={styles.descLabel}>Description</Text>
           <Text style={styles.description} numberOfLines={3}>
             {description}
           </Text>
         </View>
-      ) : null}
+      )}
+
+      {onView && onDelete && (
+        <View style={styles.actionsContainer}>
+          <Pressable style={styles.viewBtn} onPress={onView}>
+            <Ionicons name="eye-outline" size={18} color="#FFFFFF" style={styles.btnIcon} />
+            <Text style={styles.btnText}>View</Text>
+          </Pressable>
+          
+          <Pressable style={styles.deleteBtn} onPress={onDelete}>
+            <Ionicons name="trash-outline" size={18} color="#FFFFFF" style={styles.btnIcon} />
+            <Text style={styles.btnText}>Delete</Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
@@ -70,37 +84,37 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#FFFFFF",
     marginHorizontal: 16,
-    marginVertical: 10,
-    padding: 20,
+    marginVertical: 8,
+    padding: 18,
     borderRadius: 16,
-
+    
     // Softer shadow
-    elevation: 3,
+    elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
   },
 
   headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 16,
+    alignItems: "center",
+    marginBottom: 4,
   },
 
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
-    color: "#0F172A", // Dark Slate
+    color: "#0F172A",
     flex: 1,
-    marginRight: 12,
+    marginRight: 8,
   },
 
   badge: {
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 10,
   },
 
   badgeText: {
@@ -109,43 +123,84 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
 
+  client: {
+    fontSize: 14,
+    color: "#475569",
+    fontWeight: "500",
+  },
+
+  idText: {
+    fontSize: 12,
+    color: "#94A3B8",
+    marginTop: 2,
+    fontWeight: "500",
+  },
+
   row: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginTop: 8,
   },
 
   label: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#4F46E5", // Indigo (replaced blue)
-    width: 70,
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#64748B",
   },
 
   value: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: "500",
-    color: "#1E293B", // Darker Slate
-    flex: 1,
+    color: "#334155",
   },
 
   descContainer: {
-    marginTop: 12,
-    paddingTop: 12,
+    marginTop: 10,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: "#F1F5F9",
   },
 
-  descLabel: {
+  description: {
     fontSize: 14,
-    fontWeight: "500",
-    color: "#4F46E5",
-    marginBottom: 4,
+    color: "#475569",
+    lineHeight: 20,
   },
 
-  description: {
-    fontSize: 15,
-    color: "#334155",
-    lineHeight: 22,
+  actionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16,
+    gap: 12,
+  },
+
+  viewBtn: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#5D4949",
+    paddingVertical: 12,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  deleteBtn: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "#C94A4A",
+    paddingVertical: 12,
+    borderRadius: 12,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  btnIcon: {
+    marginRight: 6,
+  },
+
+  btnText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

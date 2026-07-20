@@ -1,4 +1,4 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, ThemeProvider, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Drawer } from "expo-router/drawer";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "@/hooks/use-color-scheme";
@@ -15,8 +15,38 @@ export default function RootLayout() {
         <Drawer>
         <Drawer.Screen
           name="(tabs)"
+          options={({ route }) => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "index";
+            let title = "Dashboard";
+
+            switch (routeName) {
+              case "index":
+                title = "Dashboard";
+                break;
+              case "createSurvey":
+                title = "New Survey";
+                break;
+              case "profile":
+                title = "Profile";
+                break;
+              case "history":
+                title = "Survey History";
+                break;
+              default:
+                title = "Dashboard";
+            }
+
+            return {
+              title,
+              headerShown: true,
+            };
+          }}
+        />
+
+        <Drawer.Screen
+          name="(drawer)/preview"
           options={{
-            title: "Dashboard",
+            title: "Survey Preview",
             headerShown: true,
           }}
         />
@@ -50,7 +80,7 @@ export default function RootLayout() {
           }}
         />
         <Drawer.Screen
-          name="(drawer)/seeting"
+          name="(drawer)/setting"
           options={{
             title: "Settings",
             headerShown: true,

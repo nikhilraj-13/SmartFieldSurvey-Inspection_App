@@ -11,7 +11,6 @@ import {
 
 import Header from "../../components/header";
 import SurveyCard from "../../components/SurveyCard";
-import MyButton from "../../components/MyButton";
 import MyInput from "../../components/MyInput";
 
 // Helper component for filter chips
@@ -43,10 +42,13 @@ export default function HistoryScreen() {
   };
 
   const viewDetails = (item) => {
-    Alert.alert(
-      "Survey Details",
-      `Site:\n${item.site}\n\nClient:\n${item.client}\n\nPriority:\n${item.priority}\n\nDate:\n${item.date || "N/A"}\n\nDescription:\n${item.description || "N/A"}`
-    );
+    let details = `Site:\n${item.site}\n\nClient:\n${item.client}\n\nPriority:\n${item.priority}\n\nDate:\n${item.date || "N/A"}`;
+    if (item.contact) details += `\n\nContact:\n${item.contact}`;
+    if (item.location) details += `\n\nLocation:\n${item.location}`;
+    details += `\n\nDescription:\n${item.description || "N/A"}`;
+    if (item.notes) details += `\n\nNotes:\n${item.notes}`;
+
+    Alert.alert("Survey Details", details);
   };
 
   const filteredData = surveys.filter((item) => {
@@ -57,16 +59,16 @@ export default function HistoryScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title="Survey History" />
+      <Header title="Survey History" subtitle="View previous surveys." />
       
       <View style={styles.controlsContainer}>
         <MyInput
-          placeholder="Search by Site Name..."
+          placeholder="Search survey..."
           value={search}
           onChangeText={setSearch}
+          style={styles.searchInput}
         />
 
-        <Text style={styles.filterTitle}>Filter by Priority</Text>
         <View style={styles.chipsContainer}>
           <FilterChip title="All" isActive={filter === "All"} onPress={() => setFilter("All")} />
           <FilterChip title="High" isActive={filter === "High"} onPress={() => setFilter("High")} />
@@ -86,27 +88,16 @@ export default function HistoryScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
-            <View style={styles.cardWrapper}>
-              <SurveyCard
-                site={item.site}
-                client={item.client}
-                priority={item.priority}
-                description={item.description}
-                date={item.date}
-              />
-              <View style={styles.cardActions}>
-                <MyButton
-                  title="View Details"
-                  onPress={() => viewDetails(item)}
-                  style={styles.actionBtn}
-                />
-                <MyButton
-                  title="Delete"
-                  onPress={() => handleDelete(item.id)}
-                  style={[styles.actionBtn, styles.deleteBtn]}
-                />
-              </View>
-            </View>
+            <SurveyCard
+              id={item.id}
+              site={item.site}
+              client={item.client}
+              priority={item.priority}
+              description={item.description}
+              date={item.date}
+              onView={() => viewDetails(item)}
+              onDelete={() => handleDelete(item.id)}
+            />
           )}
         />
       )}
@@ -117,52 +108,43 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC", // Match new background color
+    backgroundColor: "#F8FAFC",
   },
   controlsContainer: {
     paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#E2E8F0",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    marginBottom: 8,
+    paddingTop: 8,
+    paddingBottom: 12,
+    backgroundColor: "#F8FAFC",
   },
-  filterTitle: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#64748B",
-    marginTop: 12,
-    marginBottom: 8,
+  searchInput: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    borderColor: "#EADEC9",
+    borderWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   chipsContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 8, // Requires React Native 0.71+, safe to use generally or use margins
-    marginBottom: 8,
+    justifyContent: "space-between",
+    marginTop: 12,
+    marginBottom: 4,
   },
   chip: {
-    backgroundColor: "#F1F5F9",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#E2E8F0",
-    marginRight: 8, // Fallback for gap
-    marginBottom: 8,
+    backgroundColor: "#F4EFEA",
+    paddingVertical: 10,
+    borderRadius: 12,
+    flex: 1,
+    marginHorizontal: 4,
+    alignItems: "center",
+    justifyContent: "center",
   },
   chipActive: {
-    backgroundColor: "#4F46E5",
-    borderColor: "#4F46E5",
+    backgroundColor: "#5D4949",
   },
   chipText: {
-    color: "#475569",
-    fontWeight: "600",
+    color: "#5D4949",
+    fontWeight: "700",
     fontSize: 14,
   },
   chipTextActive: {
@@ -170,24 +152,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 20,
-  },
-  cardWrapper: {
-    marginBottom: 16,
-  },
-  cardActions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    marginTop: -4,
-  },
-  actionBtn: {
-    flex: 1,
-    marginHorizontal: 4,
-    paddingVertical: 12,
-  },
-  deleteBtn: {
-    backgroundColor: "#EF4444", // Red for delete
-    shadowColor: "#EF4444",
   },
   empty: {
     flex: 1,

@@ -10,7 +10,7 @@ export default function MyButton({ title, onPress, disabled = false, style }) {
         styles.button,
         pressed && styles.pressed,
         disabled && styles.disabled,
-        style,
+        style, // custom style merges on top, but won't remove the margin below
       ]}
     >
       <Text style={styles.text}>{title}</Text>
@@ -20,27 +20,28 @@ export default function MyButton({ title, onPress, disabled = false, style }) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: "#5D4949", // Match logout button dark brown/slate
+    backgroundColor: "#5D4949",
     paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 16, // Pill-like shape
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 8,
-    // Softer Android shadow
+    marginHorizontal: 20,   // guarantees gap from screen edges
     elevation: 3,
-    // Softer iOS shadow
     shadowColor: "#5D4949",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
+    alignSelf: "stretch",   // fills available space minus the margin, instead of a % that can be overridden
+    maxWidth: 320,
   },
   pressed: {
     opacity: 0.85,
-    transform: [{ scale: 0.97 }], // Slightly softer scale down
+    transform: [{ scale: 0.97 }],
   },
   disabled: {
-    backgroundColor: "#A5B4FC", // Light Indigo (unchanged)
+    backgroundColor: "#A5B4FC",
     shadowOpacity: 0,
     elevation: 0,
   },

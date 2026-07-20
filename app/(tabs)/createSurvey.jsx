@@ -1,49 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, Pressable } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import * as Location from "expo-location";
 import { useSurvey } from "../../context/SurveyContext";
 import MyInput from "../../components/MyInput";
 import MyButton from "../../components/MyButton";
+import Header from "../../components/header";
 
 export default function CreateSurvey() {
   const router = useRouter();
-  const { addSurvey } = useSurvey();
+  const params = useLocalSearchParams();
+  
   const [siteName, setSiteName] = useState("");
   const [clientName, setClientName] = useState("");
+  const [contact, setContact] = useState("");
+  const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState("");
+
+  useEffect(() => {
+    if (params.isEditing === "true") {
+      if (params.siteName) setSiteName(params.siteName);
+      if (params.clientName) setClientName(params.clientName);
+      if (params.contact) setContact(params.contact);
+      if (params.location) setLocation(params.location);
+      if (params.description) setDescription(params.description);
+      if (params.notes) setNotes(params.notes);
+      if (params.priority) setPriority(params.priority);
+    } else {
+      // Clear form for new surveys
+      setSiteName("");
+      setClientName("");
+      setContact("");
+      setDescription("");
+      setNotes("");
+      setPriority("");
+      setLocation("");
+
+      // Fetch location automatically in the background
+      const getGPS = async () => {
+        try {
+          const { status } = await Location.requestForegroundPermissionsAsync();
+          if (status === "granted") {
+            const loc = await Location.getCurrentPositionAsync({});
+            setLocation(`${loc.coords.latitude.toFixed(6)}, ${loc.coords.longitude.toFixed(6)}`);
+          }
+        } catch (e) {
+          // Keep location empty or set fallback
+        }
+      };
+      getGPS();
+    }
+  }, [params]);
 
   const submitSurvey = () => {
     if (
       siteName.trim() === "" ||
       clientName.trim() === "" ||
+      priority === "" ||
+      contact.trim() === "" ||
       description.trim() === "" ||
-      priority === ""
+      notes.trim() === ""
     ) {
-      Alert.alert("Error", "Please fill all fields.");
+      Alert.alert("Error", "Please fill all fields marked with *");
       return;
     }
 
-    // Auto-generate today's date since it was removed from the UI
-    const today = new Date();
-    const formattedDate = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-
-    addSurvey({
-      site: siteName,
-      client: clientName,
-      priority,
-      description,
-      date: formattedDate
+    router.push({
+      pathname: "/(drawer)/preview",
+      params: {
+        siteName,
+        clientName,
+        priority,
+        contact,
+        location: location || "22.3039, 70.8022", // Use coordinates or default
+        description,
+        notes
+      }
     });
-
-    Alert.alert("Success", "Survey Created Successfully!");
-
-    setSiteName("");
-    setClientName("");
-    setDescription("");
-    setPriority("");
-    
-    router.push("/(tabs)/history");
   };
 
   const PriorityButton = ({ title, isSelected, onPress }) => (
@@ -62,6 +97,7 @@ export default function CreateSurvey() {
       style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
+      <Header title="New Survey" subtitle="Fill in the inspection details" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* First Card: Inputs */}
         <View style={styles.card}>
@@ -79,11 +115,27 @@ export default function CreateSurvey() {
             onChangeText={setClientName}
           />
 
+          <Text style={styles.label}>Contact Number *</Text>
+          <MyInput
+            placeholder="Enter contact number"
+            value={contact}
+            onChangeText={setContact}
+            keyboardType="phone-pad"
+          />
+
           <Text style={styles.label}>Description *</Text>
           <MyInput
             placeholder="Enter survey description..."
             value={description}
             onChangeText={setDescription}
+            multiline={true}
+          />
+
+          <Text style={styles.label}>Notes *</Text>
+          <MyInput
+            placeholder="Enter inspection notes..."
+            value={notes}
+            onChangeText={setNotes}
             multiline={true}
           />
         </View>
@@ -116,7 +168,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingTop: 30, // Some top padding since we might not have a header or it's handled by tabs
+    paddingTop: 16,
     paddingBottom: 40,
   },
   card: {

@@ -7,12 +7,28 @@ type Survey = {
   priority: string;
   description: string;
   date: string;
+  contact?: string;
+  location?: string;
+  notes?: string;
+};
+
+type UserProfile = {
+  firstName: string;
+  fullName: string;
+  semester: string;
+  university: string;
+  enrollment: string;
+  email: string;
+  phone: string;
+  avatarUrl: string;
 };
 
 type SurveyContextType = {
   surveys: Survey[];
   addSurvey: (survey: Omit<Survey, 'id'>) => void;
   deleteSurvey: (id: string) => void;
+  profile: UserProfile;
+  updateProfile: (profile: UserProfile) => void;
 };
 
 const SurveyContext = createContext<SurveyContextType | null>(null);
@@ -45,6 +61,17 @@ export function SurveyProvider({ children }: { children: ReactNode }) {
     },
   ]);
 
+  const [profile, setProfile] = useState<UserProfile>({
+    firstName: "Hetavi",
+    fullName: "Hetavi Panchotia",
+    semester: "Semester 2",
+    university: "Swaminarayan University",
+    enrollment: "SUK20206954",
+    email: "hetavi@gmail.com",
+    phone: "+91 9876543210",
+    avatarUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=150&q=80",
+  });
+
   const addSurvey = (survey: Omit<Survey, 'id'>) => {
     setSurveys([...surveys, { ...survey, id: Date.now().toString() }]);
   };
@@ -53,8 +80,12 @@ export function SurveyProvider({ children }: { children: ReactNode }) {
     setSurveys(surveys.filter((item) => item.id !== id));
   };
 
+  const updateProfile = (updatedProfile: UserProfile) => {
+    setProfile(updatedProfile);
+  };
+
   return (
-    <SurveyContext.Provider value={{ surveys, addSurvey, deleteSurvey }}>
+    <SurveyContext.Provider value={{ surveys, addSurvey, deleteSurvey, profile, updateProfile }}>
       {children}
     </SurveyContext.Provider>
   );
