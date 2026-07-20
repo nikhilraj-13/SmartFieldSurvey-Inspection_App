@@ -1,10 +1,16 @@
-import { View, Text, StyleSheet, ScrollView, Pressable, Image } from "react-native";
-import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useSurvey } from "../../context/SurveyContext";
-import Header from "../../components/header";
-import SurveyCard from "../../components/SurveyCard";
+import { useRouter } from "expo-router";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import MyButton from "../../components/MyButton";
+import SurveyCard from "../../components/SurveyCard";
+import { useSurvey } from "../../context/SurveyContext";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -13,8 +19,10 @@ export default function Dashboard() {
   const recentSurveys = surveys.slice(-2).reverse();
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
-      
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContent}
+    >
       {/* Welcome Row with Profile Avatar */}
       <View style={styles.welcomeRow}>
         <View>
@@ -22,9 +30,9 @@ export default function Dashboard() {
           <Text style={styles.welcomeName}>{profile.firstName}</Text>
         </View>
         <Pressable onPress={() => router.push("/(tabs)/profile")}>
-          <Image 
-            source={{ uri: profile.avatarUrl }} 
-            style={styles.profileAvatar} 
+          <Image
+            source={{ uri: profile.avatarUrl }}
+            style={styles.profileAvatar}
           />
         </Pressable>
       </View>
@@ -32,19 +40,34 @@ export default function Dashboard() {
       {/* Card 1: Student Details */}
       <View style={styles.detailsCard}>
         <Text style={styles.detailsTitle}>Student Details</Text>
-        
+
         <View style={styles.infoRow}>
-          <Ionicons name="person" size={18} color="#5D4949" style={styles.infoIcon} />
+          <Ionicons
+            name="person"
+            size={18}
+            color="#5D4949"
+            style={styles.infoIcon}
+          />
           <Text style={styles.infoText}>{profile.fullName}</Text>
         </View>
 
         <View style={styles.infoRow}>
-          <Ionicons name="school" size={18} color="#5D4949" style={styles.infoIcon} />
+          <Ionicons
+            name="school"
+            size={18}
+            color="#5D4949"
+            style={styles.infoIcon}
+          />
           <Text style={styles.infoText}>{profile.semester}</Text>
         </View>
 
         <View style={styles.infoRow}>
-          <Ionicons name="business" size={18} color="#5D4949" style={styles.infoIcon} />
+          <Ionicons
+            name="business"
+            size={18}
+            color="#5D4949"
+            style={styles.infoIcon}
+          />
           <Text style={styles.infoText}>{profile.university}</Text>
         </View>
       </View>
@@ -58,24 +81,36 @@ export default function Dashboard() {
       <Text style={styles.sectionTitle}>Quick Actions</Text>
 
       <View style={styles.row}>
-        <Pressable style={styles.card} onPress={() => router.push("/(tabs)/createSurvey")}>
+        <Pressable
+          style={styles.card}
+          onPress={() => router.push("/(tabs)/createSurvey")}
+        >
           <Text style={styles.icon}>📋</Text>
           <Text style={styles.cardText}>New Survey</Text>
         </Pressable>
 
-        <Pressable style={styles.card} onPress={() => router.push("/(drawer)/camera")}>
+        <Pressable
+          style={styles.card}
+          onPress={() => router.push("/(drawer)/camera")}
+        >
           <Text style={styles.icon}>⋆.📷˚</Text>
           <Text style={styles.cardText}>Camera</Text>
         </Pressable>
       </View>
 
       <View style={styles.row}>
-        <Pressable style={styles.card} onPress={() => router.push("/(drawer)/location")}>
+        <Pressable
+          style={styles.card}
+          onPress={() => router.push("/(drawer)/location")}
+        >
           <Text style={styles.icon}>➣</Text>
           <Text style={styles.cardText}>Location</Text>
         </Pressable>
 
-        <Pressable style={styles.card} onPress={() => router.push("/(drawer)/clipboard")}>
+        <Pressable
+          style={styles.card}
+          onPress={() => router.push("/(drawer)/clipboard")}
+        >
           <Text style={styles.icon}>📞</Text>
           <Text style={styles.cardText}>Contacts</Text>
         </Pressable>
@@ -92,6 +127,8 @@ export default function Dashboard() {
           priority={survey.priority}
           description={survey.description}
           date={survey.date}
+          onView={() => {}}
+          onDelete={() => {}}
         />
       ))}
 

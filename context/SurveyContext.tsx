@@ -62,14 +62,14 @@ export function SurveyProvider({ children }: { children: ReactNode }) {
   ]);
 
   const [profile, setProfile] = useState<UserProfile>({
-    firstName: "Hetavi",
-    fullName: "Hetavi Panchotia",
-    semester: "Semester 2",
+    firstName: "Nikhil",
+    fullName: "Nikhil Raj",
+    semester: "Semester 3",
     university: "Swaminarayan University",
-    enrollment: "SUK20206954",
-    email: "hetavi@gmail.com",
-    phone: "+91 9876543210",
-    avatarUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=150&q=80",
+    enrollment: "SUK250054CE014",
+    email: "nikhil.raj.cg@gmail.com",
+    phone: "+91 8252799973",
+    avatarUrl: "https://res.cloudinary.com/djxj4t2xg/image/upload/v1784549553/file_k6b3mp.jpg",
   });
 
   const addSurvey = (survey: Omit<Survey, 'id'>) => {
