@@ -127,8 +127,6 @@ export default function Dashboard() {
           priority={survey.priority}
           description={survey.description}
           date={survey.date}
-          onView={() => {}}
-          onDelete={() => {}}
         />
       ))}
 
